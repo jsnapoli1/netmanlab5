@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 def show_git_differences(local_path):
-
+	
     try:
         repo = Repo(local_path)
         

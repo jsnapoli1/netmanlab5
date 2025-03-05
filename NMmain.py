@@ -37,8 +37,9 @@ def get_ipv6_from_slaac_server(
     except Exception as e:
         print(f"Error getting IPv6 from SLAAC: {str(e)}")
         return None
+        
+async def main():
 
-async def for_later():
     R4_IP = "198.51.100.1"  # Example IP - adjust as needed
     R5_IP = None  # Will be discovered via SLAAC
     USERNAME = "admin"  # Adjust credentials as needed
@@ -117,8 +118,6 @@ async def for_later():
     # git config --global credential.helper store
     # Then the first time you push, enter your GitHub username and PAT as password
     # make sure you git init the directory first <---- might not need to do this, I think it is done in code
-
-async def main():
 
     # Step 5: Push changes to GitHub
     print("\nStep 5: Pushing changes to GitHub...")
