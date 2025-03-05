@@ -90,9 +90,6 @@ async def get_router_info():
     # SNMP community string and target routers with their IPs
     community = 'public'
 
-
-    # TODO: Legit fill this out
-
     router_ips = {
         'R1': '198.51.101.1',
         'R2': '192.168.2.2',
@@ -103,13 +100,37 @@ async def get_router_info():
     
     for router_name, router_ip in router_ips.items():
         try:
-            # Initialize nested dictionaries
+            # Initialize router structures
             router_addresses[router_name] = {"addresses": {}}
             interface_status[router_name] = {}
             
             # Get interface names and their indices
             interfaces = await get_interface_names(router_ip, community)
-            print(interfaces)
+            if interfaces:
+                for interface_id, interface_data in interfaces.items():
+                    interface_name = interface_data[0]  # First element is the interface name
+                    status = interface_data[1]  # Second element is status
+                    ipv4_addr = interface_data[2]  # Third element is IPv4
+                    ipv6_addr = interface_data[3]  # Fourth element is IPv6
+                    
+                    # Store status for all interfaces
+                    interface_status[router_name][interface_name] = status
+                    
+                    # Convert "None" strings to null values
+                    ipv4_addr = None if ipv4_addr == "None" else ipv4_addr
+                    ipv6_addr = None if ipv6_addr == "None" else ipv6_addr
+                    
+                    # Only add interfaces that have at least one IP address
+                    if ipv4_addr is not None or ipv6_addr is not None:
+                        router_addresses[router_name]["addresses"][interface_name] = {
+                            "v4": ipv4_addr,
+                            "v6": ipv6_addr
+                        }
+            
+            print(f"Router {router_name} addresses:")
+            print(json.dumps(router_addresses[router_name], indent=2))
+            print(f"\nRouter {router_name} interface status:")
+            print(json.dumps({router_name: interface_status[router_name]}, indent=2))
                 
         except Exception as e:
             print(f"Error processing {router_name} ({router_ip}): {str(e)}")
