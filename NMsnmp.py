@@ -136,6 +136,15 @@ async def get_router_info():
             print(f"Error processing {router_name} ({router_ip}): {str(e)}")
             continue
     
+    combined_data = {
+    	"addresses":router_addresses,
+    	"status":interface_status
+    }
+    
+    with open('interface_info.json','w') as f:
+        json.dump(combined_data,f,indent=2)
+        print("\nInterface info saved to interface_info.json")
+    
     return router_addresses, interface_status
 
 async def monitor_cpu_usage(router, community, duration=300, interval=5):
