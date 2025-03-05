@@ -37,8 +37,8 @@ def get_ipv6_from_slaac_server(
     except Exception as e:
         print(f"Error getting IPv6 from SLAAC: {str(e)}")
         return None
-        
-def for_later():
+
+async def for_later():
     R4_IP = "198.51.100.1"  # Example IP - adjust as needed
     R5_IP = None  # Will be discovered via SLAAC
     USERNAME = "admin"  # Adjust credentials as needed
@@ -51,7 +51,13 @@ def for_later():
         print("Failed to get R5's IPv6 address")
         return
     print(f"R5's IPv6 address: {R5_IPv6}")
-
+    
+    # Step 2: Configure DHCP on R5
+    print("\nStep 2: Configuring DHCP on R5...")
+    
+    # MAC addresses for R2 and R3 (example format - adjust as needed)
+    R2_MAC = "ca02.31b1.0000"
+    R3_MAC = "ca03.31c0.0000"
 
     # Configure static DHCP for R2
     success, message = NMdhcp.configure_dhcp(
@@ -85,15 +91,6 @@ def for_later():
         static=False
     )
     print(f"R4 DHCP configuration: {message}")
-
-async def main():
-    
-    # Step 2: Configure DHCP on R5
-    print("\nStep 2: Configuring DHCP on R5...")
-    
-    # MAC addresses for R2 and R3 (example format - adjust as needed)
-    R2_MAC = "ca02.31b1.0000"
-    R3_MAC = "ca03.31c0.0000"
     
     # Step 3: Get interface information via SNMP
     print("\nStep 3: Fetching interface information via SNMP...")
@@ -120,6 +117,8 @@ async def main():
     # git config --global credential.helper store
     # Then the first time you push, enter your GitHub username and PAT as password
     # make sure you git init the directory first <---- might not need to do this, I think it is done in code
+
+async def main():
 
     # Step 5: Push changes to GitHub
     print("\nStep 5: Pushing changes to GitHub...")

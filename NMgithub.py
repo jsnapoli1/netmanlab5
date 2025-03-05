@@ -1,11 +1,11 @@
-import git
+from git import Repo
 import os
 from datetime import datetime
 
 def show_git_differences(local_path):
 
     try:
-        repo = git.Repo(local_path)
+        repo = Repo(local_path)
         
         # get differences between working directory and last commit
         diff = repo.git.diff('HEAD', '--color')
@@ -39,9 +39,9 @@ def push_to_github(local_path, repo_url, branch="main", commit_message=None):
         show_git_differences(local_path)
 
         if not os.path.exists(os.path.join(local_path, '.git')):
-            repo = git.Repo.init(local_path)
+            repo = Repo.init(local_path)
         else:
-            repo = git.Repo(local_path)
+            repo = Repo(local_path)
 
         try:
             origin = repo.remote('origin')
